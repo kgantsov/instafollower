@@ -48,17 +48,18 @@ def get_driver():
 
 
 def login(driver, username, password):
-    login_btn = driver.find_element_by_xpath("//p[@class='_g9ean']/a[text()='Log in']")
+    login_btn = driver.find_element_by_xpath("//p[@class='izU2O']/a[text()='Log in']")
     login_btn.click()
+    time.sleep(5)
 
-    login_input = driver.find_element_by_xpath("//INPUT[@type='text']")
+    login_input = driver.find_element_by_xpath("//INPUT[@name='username']")
     login_input.send_keys(username)
 
     password_input = driver.find_element_by_xpath("//INPUT[@type='password']")
     password_input.send_keys(password)
     password_input.send_keys(Keys.RETURN)
 
-    time.sleep(2)
+    time.sleep(10)
 
 
 def search(driver, tag):
@@ -89,11 +90,12 @@ def go_to_next_photo(driver):
 
 def is_already_liked(driver):
     try:
-        driver.find_element_by_xpath("//span[text()='Like']")
+        driver.find_element_by_xpath("//span[@aria-label='Like']")
     except NoSuchElementException:
-        print('Picture has already been liked this picture {}'.format(driver.current_url))
+        print('Picture has already been liked {}'.format(driver.current_url))
         return True
     else:
+        print('Picture has NOT been liked yet {}'.format(driver.current_url))
         return False
 
 
@@ -108,17 +110,19 @@ def like_post(driver):
         return False
 
     try:
-        like_btn = driver.find_element_by_xpath("//span[text()='Like']")
+        like_btn = driver.find_element_by_xpath("//span[@aria-label='Like']")
     except NoSuchElementException:
+        print('Could not find like button {}'.format(driver.current_url))
+        time.sleep(1)
+
         return False
     else:
+        print('Found like button. Trying to like {}'.format(driver.current_url))
         like_btn.click()
 
         Like.create(url=url)
 
     print('Liked picture {url}'.format(url=url))
-
-    time.sleep(1)
 
     return True
 
