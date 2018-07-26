@@ -36,10 +36,18 @@ def get_url(driver):
 
 
 def get_driver():
+    options = webdriver.ChromeOptions()
+    options.add_argument('headless')
+    options.add_argument('window-size=1200x600')
+
+    driver = webdriver.Chrome(
+        executable_path='/usr/local/bin/chromedriver',
+        chrome_options=options
+    )
     # driver = webdriver.Chrome(
     #     executable_path=os.path.join(dir_path, 'chromedriver')
     # )
-    driver = webdriver.Firefox()
+    # driver = webdriver.Firefox()
     # driver = webdriver.PhantomJS()
 
     driver.implicitly_wait(15)
