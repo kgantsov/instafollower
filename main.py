@@ -278,18 +278,27 @@ def run_follower(tag, count, gui):
     while liked < count:
         go_to_next_photo(driver)
 
-        if like_post(driver):
+        was_liked = like_post(driver)
+
+        if was_liked:
             liked += 1
 
         # if have_like(15) and comment_post(driver, text=get_random_comment()):
         #     commented += 1
 
-        if have_like(33) and subscribe(driver):
-            subscribed += 1
+        # if have_like(33) and subscribe(driver):
+        #     subscribed += 1
 
         print('Liked: {}, Commented: {} Subscribed {}'.format(liked, commented, subscribed))
 
-        time.sleep(random.randint(1, 8))
+        if was_liked:
+            duraction = random.randint(20, 60)
+            print('Sleeping for {} seconds'.format(duraction))
+            time.sleep(duraction)
+        else:
+            duraction = random.randint(1, 8)
+            print('Sleeping for {} seconds'.format(duraction))
+            time.sleep(duraction)
 
     driver.close()
 
