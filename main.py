@@ -35,9 +35,12 @@ def get_url(driver):
     return urljoin('{}://{}'.format(url.scheme, url.netloc), url.path)
 
 
-def get_driver():
+def get_driver(gui=True):
     options = webdriver.ChromeOptions()
-    options.add_argument('headless')
+
+    if not gui:
+        options.add_argument('headless')
+
     options.add_argument('window-size=1200x600')
 
     driver = webdriver.Chrome(
@@ -259,11 +262,7 @@ def cli():
 @click.option('--count', default=100, help='Number of user to follow')
 @click.option('--gui/--no-gui', default=True, help='GUI')
 def run_follower(tag, count, gui):
-    if not gui:
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-
-    driver = get_driver()
+    driver = get_driver(gui)
 
     driver.get("https://www.instagram.com/")
 
@@ -302,21 +301,14 @@ def run_follower(tag, count, gui):
 
     driver.close()
 
-    if not gui:
-        display.stop()
-
 
 @cli.command()
 @click.option('--count', default=100, help='Number of user to follow')
 @click.option('--gui/--no-gui', default=True, help='GUI')
 def run_unfollower(count, gui):
-    if not gui:
-        display = Display(visible=0, size=(800, 600))
-        display.start()
-
     initial_count = count
 
-    driver = get_driver()
+    driver = get_driver(gui)
     driver.implicitly_wait(3)
 
     driver.get("https://www.instagram.com/")
@@ -394,9 +386,6 @@ def run_unfollower(count, gui):
         ))
 
     driver.close()
-
-    if not gui:
-        display.stop()
 
 
 @cli.command()
