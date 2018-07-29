@@ -1,6 +1,8 @@
 import time
 import random
 import os
+import logging
+import sys
 
 from datetime import datetime
 from datetime import timedelta
@@ -24,6 +26,14 @@ username = os.environ['instagram_username']
 password = os.environ['instagram_password']
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
+
+logging.basicConfig(
+    stream=sys.stdout,
+    level='INFO',
+    format='%(asctime)s %(levelname)s:%(name)s:%(message)s'
+)
+
+log = logging.getLogger('app')
 
 
 def have_like(p):
@@ -103,10 +113,10 @@ def is_already_liked(driver):
     try:
         driver.find_element_by_xpath("//span[@aria-label='Like']")
     except NoSuchElementException:
-        print('Picture has already been liked {}'.format(driver.current_url))
+        log.info('Picture has already been liked {}'.format(driver.current_url))
         return True
     else:
-        print('Picture has NOT been liked yet {}'.format(driver.current_url))
+        log.info('Picture has NOT been liked yet {}'.format(driver.current_url))
         return False
 
 
@@ -117,23 +127,23 @@ def like_post(driver):
     except Like.DoesNotExist:
         pass
     else:
-        print('Post has already been liked {url}'.format(url=url))
+        log.info('Post has already been liked {url}'.format(url=url))
         return False
 
     try:
         like_btn = driver.find_element_by_xpath("//span[@aria-label='Like']")
     except NoSuchElementException:
-        print('Could not find like button {}'.format(driver.current_url))
+        log.info('Could not find like button {}'.format(driver.current_url))
         time.sleep(1)
 
         return False
     else:
-        print('Found like button. Trying to like {}'.format(driver.current_url))
+        log.info('Found like button. Trying to like {}'.format(driver.current_url))
         like_btn.click()
 
         Like.create(url=url)
 
-    print('Liked picture {url}'.format(url=url))
+    log.info('Liked picture {url}'.format(url=url))
 
     return True
 
@@ -145,13 +155,13 @@ def comment_post(driver, text):
     except Comment.DoesNotExist:
         pass
     else:
-        print('Post has already been commented {url}'.format(url=url))
+        log.info('Post has already been commented {url}'.format(url=url))
         return False
 
     try:
         comment_input = driver.find_element_by_xpath('//TEXTAREA[@placeholder="Add a comment…"]')
     except NoSuchElementException as e:
-        print(e)
+        log.info(e)
         return False
     else:
         # comment_input.click()
@@ -176,7 +186,7 @@ def comment_post(driver, text):
 
         Comment.create(url=url, comment=text)
 
-    print('Commented picture {url} with "{text}"'.format(url=url, text=text))
+    log.info('Commented picture {url} with "{text}"'.format(url=url, text=text))
 
     time.sleep(1)
     return True
@@ -193,7 +203,7 @@ def subscribe(driver):
     except Following.DoesNotExist:
         pass
     else:
-        print(
+        log.info(
             'Already subscribed on user: @{user} ({following})'.format(
                 user=name,
                 following=following
@@ -204,18 +214,18 @@ def subscribe(driver):
     btn_text = follow_btn.text
 
     if btn_text == 'Follow':
-        print('Going to subscribe on user: @{user}'.format(user=name))
+        log.info('Going to subscribe on user: @{user}'.format(user=name))
 
         try:
             follow_btn.click()
             time.sleep(1)
         except Exception as e:
-            print(e)
+            log.info(e)
         else:
             Following.create(name=name)
             return True
     else:
-        print('Already subscribed on user: @{user}'.format(user=name))
+        log.info('Already subscribed on user: @{user}'.format(user=name))
         return False
 
 
@@ -288,15 +298,15 @@ def run_follower(tag, count, gui):
         # if have_like(33) and subscribe(driver):
         #     subscribed += 1
 
-        print('Liked: {}, Commented: {} Subscribed {}'.format(liked, commented, subscribed))
+        log.info('Liked: {}, Commented: {} Subscribed {}'.format(liked, commented, subscribed))
 
         if was_liked:
             duraction = random.randint(20, 60)
-            print('Sleeping for {} seconds'.format(duraction))
+            log.info('Sleeping for {} seconds'.format(duraction))
             time.sleep(duraction)
         else:
             duraction = random.randint(1, 8)
-            print('Sleeping for {} seconds'.format(duraction))
+            log.info('Sleeping for {} seconds'.format(duraction))
             time.sleep(duraction)
 
     driver.close()
@@ -327,7 +337,7 @@ def run_unfollower(count, gui):
         if count <= 0:
             return
 
-        print(
+        log.info(
             'Going to unfollow `@{user}` ({date})'.format(
                 user=following.name, date=following.date_created
             )
@@ -341,12 +351,12 @@ def run_unfollower(count, gui):
         except NoSuchElementException:
             still_following = False
 
-            print('Already not following user `@{user}`'.format(user=following.name))
+            log.info('Already not following user `@{user}`'.format(user=following.name))
 
             following.is_following = False
             following.save()
         else:
-            print('Still following user `@{user}`'.format(user=following.name))
+            log.info('Still following user `@{user}`'.format(user=following.name))
             still_following = True
             unfollow_btn.click()
             time.sleep(2)
@@ -368,12 +378,12 @@ def run_unfollower(count, gui):
                 except NoSuchElementException:
                     pass
                 else:
-                    print(
+                    log.info(
                         'Still following user `@{user}` (tries {tries})'.format(
-                                user=following.name,
-                                tries=tries
-                            )
+                            user=following.name,
+                            tries=tries
                         )
+                    )
                     still_following = True
                     unfollow_btn.click()
                     if tries == 0:
@@ -381,7 +391,7 @@ def run_unfollower(count, gui):
 
             tries += 1
 
-        print('-- {count} of {initial_count} users are unfollowed --'.format(
+        log.info('-- {count} of {initial_count} users are unfollowed --'.format(
             count=initial_count - count, initial_count=initial_count
         ))
 
