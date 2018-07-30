@@ -50,6 +50,7 @@ def get_driver(gui=True):
 
     if not gui:
         options.add_argument('headless')
+        options.add_argument('--no-sandbox')
 
     options.add_argument('window-size=1200x600')
 
