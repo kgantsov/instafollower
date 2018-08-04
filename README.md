@@ -1,4 +1,6 @@
-# instafollower
+# Instafollower
+An application that does search by instagram tag, likes images that were found and from time to time follows post owners and comments posts
+
 
 
 # Installation
