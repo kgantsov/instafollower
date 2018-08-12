@@ -194,10 +194,10 @@ def comment_post(driver, text):
 
 
 def subscribe(driver):
-    name_label = driver.find_element_by_xpath("//article/header/div//a[text()]")
+    name_label = driver.find_element_by_xpath("//article/header//div[@class='e1e1d']/a[text()]")
     name = name_label.text
 
-    follow_btn = driver.find_element_by_xpath("//article/header//span/button")
+    follow_btn = driver.find_element_by_xpath("//article/header/div//button[text()]")
 
     try:
         following = Following.select().where(Following.name == name).get()
@@ -296,8 +296,8 @@ def run_follower(tag, count, gui):
         # if have_like(15) and comment_post(driver, text=get_random_comment()):
         #     commented += 1
 
-        # if have_like(33) and subscribe(driver):
-        #     subscribed += 1
+        if have_like(33) and subscribe(driver):
+            subscribed += 1
 
         log.info('Liked: {}, Commented: {} Subscribed {}'.format(liked, commented, subscribed))
 
