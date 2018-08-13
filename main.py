@@ -58,11 +58,6 @@ def get_driver(gui=True):
         executable_path='/usr/local/bin/chromedriver',
         chrome_options=options
     )
-    # driver = webdriver.Chrome(
-    #     executable_path=os.path.join(dir_path, 'chromedriver')
-    # )
-    # driver = webdriver.Firefox()
-    # driver = webdriver.PhantomJS()
 
     driver.implicitly_wait(15)
 
@@ -88,7 +83,6 @@ def search(driver, tag):
     driver.get('https://www.instagram.com/explore/tags/{tag}/'.format(tag=tag))
     time.sleep(4)
 
-    # first_image = driver.find_element_by_xpath("//article/div[2]/div/div/a")
     first_image = driver.find_element_by_xpath(
         "//article/div[2]/div[1]/div[1]/div[1]"
     )
@@ -294,6 +288,7 @@ def run_follower(tag, count, gui):
             liked += 1
 
         # if have_like(15) and comment_post(driver, text=get_random_comment()):
+        # if comment_post(driver, text=get_random_comment()):
         #     commented += 1
 
         if have_like(33) and subscribe(driver):
