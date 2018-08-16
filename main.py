@@ -356,12 +356,28 @@ def run_unfollower(count, gui):
             still_following = True
             unfollow_btn.click()
             time.sleep(2)
+            
+            try:
+                unfollow_btn = driver.find_element_by_xpath("//div[@class='piCib']//button[text()='Unfollow']")
+            except NoSuchElementException:
+                pass
+            else:
+                still_following = True
+                unfollow_btn.click()
+                time.sleep(2)
 
         tries = 0
         while still_following:
             driver.refresh()
             try:
                 driver.find_element_by_xpath("//button[text()='Follow']")
+            except NoSuchElementException:
+                pass
+            else:
+                still_following = False
+                count -= 1
+            try:
+                driver.find_element_by_xpath("//button[text()='Follow Back']")
             except NoSuchElementException:
                 pass
             else:
