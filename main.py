@@ -355,7 +355,9 @@ def run_unfollower(count, gui):
             log.info('Still following user `@{user}`'.format(user=following.name))
             still_following = True
             unfollow_btn.click()
-            time.sleep(2)
+            duraction = random.randint(5, 10)
+            log.info('Sleeping for {} seconds'.format(duraction))
+            time.sleep(duraction)
 
             try:
                 unfollow_btn = driver.find_element_by_xpath(
