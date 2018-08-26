@@ -36,6 +36,11 @@ logging.basicConfig(
 log = logging.getLogger('app')
 
 
+def sleep(duraction):
+    log.info('Sleeping for {} seconds'.format(duraction))
+    time.sleep(duraction)
+
+
 def have_like(p):
     return random.randint(1, 100) < p
 
@@ -67,7 +72,7 @@ def get_driver(gui=True):
 def login(driver, username, password):
     login_btn = driver.find_element_by_xpath("//p[@class='izU2O']/a[text()='Log in']")
     login_btn.click()
-    time.sleep(5)
+    sleep(5)
 
     login_input = driver.find_element_by_xpath("//INPUT[@name='username']")
     login_input.send_keys(username)
@@ -76,19 +81,19 @@ def login(driver, username, password):
     password_input.send_keys(password)
     password_input.send_keys(Keys.RETURN)
 
-    time.sleep(10)
+    sleep(10)
 
 
 def search(driver, tag):
     driver.get('https://www.instagram.com/explore/tags/{tag}/'.format(tag=tag))
-    time.sleep(4)
+    sleep(4)
 
     first_image = driver.find_element_by_xpath(
         "//article/div[2]/div[1]/div[1]/div[1]"
     )
     first_image.click()
 
-    time.sleep(2)
+    sleep(2)
 
 
 def go_to_next_photo(driver):
@@ -298,12 +303,10 @@ def run_follower(tag, count, gui):
 
         if was_liked:
             duraction = random.randint(20, 60)
-            log.info('Sleeping for {} seconds'.format(duraction))
-            time.sleep(duraction)
+            sleep(duraction)
         else:
             duraction = random.randint(1, 8)
-            log.info('Sleeping for {} seconds'.format(duraction))
-            time.sleep(duraction)
+            sleep(duraction)
 
     driver.close()
 
@@ -356,8 +359,7 @@ def run_unfollower(count, gui):
             still_following = True
             unfollow_btn.click()
             duraction = random.randint(5, 10)
-            log.info('Sleeping for {} seconds'.format(duraction))
-            time.sleep(duraction)
+            sleep(duraction)
 
             try:
                 unfollow_btn = driver.find_element_by_xpath(
@@ -368,7 +370,7 @@ def run_unfollower(count, gui):
             else:
                 still_following = True
                 unfollow_btn.click()
-                time.sleep(2)
+                sleep(2)
 
         tries = 0
         while still_following:
