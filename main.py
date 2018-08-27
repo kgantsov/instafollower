@@ -36,9 +36,9 @@ logging.basicConfig(
 log = logging.getLogger('app')
 
 
-def sleep(duraction):
-    log.info('Sleeping for {} seconds'.format(duraction))
-    time.sleep(duraction)
+def sleep(duration):
+    log.info('Sleeping for {} seconds'.format(duration))
+    time.sleep(duration)
 
 
 def have_like(p):
@@ -302,11 +302,11 @@ def run_follower(tag, count, gui):
         log.info('Liked: {}, Commented: {} Subscribed {}'.format(liked, commented, subscribed))
 
         if was_liked:
-            duraction = random.randint(20, 60)
-            sleep(duraction)
+            duration = random.randint(20, 60)
+            sleep(duration)
         else:
-            duraction = random.randint(1, 8)
-            sleep(duraction)
+            duration = random.randint(1, 8)
+            sleep(duration)
 
     driver.close()
 
@@ -358,8 +358,8 @@ def run_unfollower(count, gui):
             log.info('Still following user `@{user}`'.format(user=following.name))
             still_following = True
             unfollow_btn.click()
-            duraction = random.randint(5, 10)
-            sleep(duraction)
+            duration = random.randint(5, 10)
+            sleep(duration)
 
             try:
                 unfollow_btn = driver.find_element_by_xpath(
